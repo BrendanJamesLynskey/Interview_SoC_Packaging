@@ -33,7 +33,7 @@ A 2.5D package assembly requires bonding 2 compute chiplets and 4 HBM3 stacks on
 | 19 | Singulation | 30 sec | Saw |
 | 20 | Final inspection | 120 sec | AOI + X-ray |
 
-Total serial time: ~45 minutes (dominated by two underfill cure steps at 30 min each).
+Total serial time: the table sums to ~4,580 sec, about 76 minutes (dominated by the two underfill cure steps at 30 min each; the two cures alone exceed the 45 minutes quoted in the problem statement).
 
 ### Step 2: Identify the Bottleneck
 

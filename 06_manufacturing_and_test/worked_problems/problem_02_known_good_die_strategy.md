@@ -76,12 +76,13 @@ At this volume, enhanced KGD testing costs more than the scrap savings.
 At what package value does enhanced KGD break even?
 
 ```
-Scrap savings needed = $3,300,000
 Scrap reduction per package = ($2,630 * 0.0055) - ($2,630 * 0.00055) = $14.47 - $1.45 = $13.02
-Packages needed = $3,300,000 / $13.02 = 253,456 packages
+Incremental test cost per package = 11 die * ($5 - $2) = $33
 ```
 
-Or, at what package value does it break even at 100K volume?
+Volume does not help: both the saving ($13.02) and the incremental test cost ($33) are per package, so enhanced KGD loses $19.98 per package at any volume. The break-even is set by package value.
+
+At what package value does it break even?
 
 ```
 Per-package savings needed = $3,300,000 / 100,000 = $33
@@ -113,7 +114,7 @@ With rework, the scrap cost is much lower, making enhanced KGD even harder to ju
 
 **At 100K volume and $2,630 package value, standard KGD with rework is the most economical.**
 
-**At higher package values ($6,667+) or higher volumes (253K+), enhanced KGD becomes justified.**
+**At package values above about $6,667, enhanced KGD becomes justified (volume alone does not change the per-package balance).**
 
 ---
 
@@ -121,6 +122,6 @@ With rework, the scrap cost is much lower, making enhanced KGD even harder to ju
 
 - KGD testing is an economic optimization, not a binary decision.
 - The value of KGD testing scales with package value and die count per package.
-- For the most expensive packages (AI accelerators at $5,000+), enhanced KGD is clearly justified.
+- For the most expensive packages (above the ~$6,700 break-even here), enhanced KGD is justified.
 - Rework capability reduces the economic penalty of KGD escapes but adds process complexity.
 - Always perform the cost-benefit calculation with actual production volumes and package costs.

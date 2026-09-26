@@ -70,27 +70,27 @@ Zdiff = 125.6 * (1 - 0.48 * 0.430) = 125.6 * 0.794 = 99.7 ohm
 Skin depth at 14 GHz:
 ```
 delta = sqrt(1.7e-8 / (pi * 14e9 * 4*pi*1e-7))
-delta = sqrt(1.7e-8 / 1.76e-1) = sqrt(9.66e-8) = 0.311 um
+delta = sqrt(1.7e-8 / 5.527e4) = sqrt(3.08e-13) = 0.555 um
 ```
 
 Effective conductor cross-section (accounting for skin effect -- current flows in a thin skin around the trace perimeter):
 ```
 Perimeter = 2*(w + t) = 2*(39 + 12) = 102 um
-Effective area = Perimeter * delta = 102e-6 * 0.311e-6 = 31.7e-12 m^2
-R_per_length = rho / A_eff = 1.7e-8 / 31.7e-12 = 536 ohm/m
+Effective area = Perimeter * delta = 102e-6 * 0.555e-6 = 56.6e-12 m^2
+R_per_length = rho / A_eff = 1.7e-8 / 56.6e-12 = 300 ohm/m
 ```
 
 Adding surface roughness factor (Krms = 0.5 um typical for ABF):
 ```
 Roughness correction = 1 + (2/pi) * atan(1.4 * (Krms/delta)^2)
-= 1 + 0.637 * atan(1.4 * (0.5/0.311)^2)
-= 1 + 0.637 * atan(3.62) = 1 + 0.637 * 1.30 = 1.83
-R_corrected = 536 * 1.83 = 981 ohm/m
+= 1 + 0.637 * atan(1.4 * (0.5/0.555)^2)
+= 1 + 0.637 * atan(1.14) = 1 + 0.637 * 0.850 = 1.54
+R_corrected = 300 * 1.54 = 463 ohm/m
 ```
 
 Conductor loss:
 ```
-alpha_c = R / (2 * Z0) = 981 / (2 * 50) = 9.81 Np/m = 85.2 dB/m = 0.852 dB/cm
+alpha_c = R / (2 * Z0) = 463 / (2 * 50) = 4.63 Np/m = 40.2 dB/m = 0.402 dB/cm
 ```
 
 **Dielectric loss (alpha_d):**
@@ -104,16 +104,16 @@ alpha_d = (pi * 14e9 * sqrt(2.15) * 0.015) / 3e8
 
 **Total insertion loss for 20 mm trace:**
 ```
-IL_conductor = 0.852 * 2.0 = 1.704 dB
+IL_conductor = 0.402 * 2.0 = 0.804 dB
 IL_dielectric = 0.280 * 2.0 = 0.560 dB
-IL_total_trace = 2.264 dB
+IL_total_trace = 1.364 dB
 ```
 
 **Add via and bump transitions (estimated):**
 ```
 2 bump transitions: ~0.3 dB
 2 via transitions: ~0.2 dB
-IL_total_package = 2.264 + 0.3 + 0.2 = 2.76 dB
+IL_total_package = 1.364 + 0.3 + 0.2 = 1.86 dB
 ```
 
 ### Step 4: Summary
@@ -122,19 +122,19 @@ IL_total_package = 2.264 + 0.3 + 0.2 = 2.76 dB
 |---|---|
 | 50-ohm SE trace width | 39 um |
 | 100-ohm diff pair: width/space | 24 um / 22 um |
-| Skin depth at 14 GHz | 0.31 um |
-| Conductor loss at 14 GHz | 0.85 dB/cm |
+| Skin depth at 14 GHz | 0.55 um |
+| Conductor loss at 14 GHz | 0.40 dB/cm |
 | Dielectric loss at 14 GHz | 0.28 dB/cm |
-| Total loss at 14 GHz (20 mm) | 2.76 dB (including transitions) |
-| Roughness factor | 1.83x increase in conductor loss |
+| Total loss at 14 GHz (20 mm) | 1.86 dB (including transitions) |
+| Roughness factor | 1.54x increase in conductor loss |
 
-For 28 Gbps NRZ with a typical package insertion loss budget of 4-5 dB, the 2.76 dB from the package leaves 1.2-2.2 dB of margin -- adequate.
+For 28 Gbps NRZ with a typical package insertion loss budget of 4-5 dB, the 1.86 dB from the package leaves 2.1-3.1 dB of margin -- adequate.
 
 ---
 
 ## Key Takeaways
 
-- Conductor loss dominates dielectric loss at fine trace widths (3:1 ratio in this example).
-- Surface roughness nearly doubles the conductor loss -- smooth copper interfaces are critical for high-speed.
-- The skin depth at 14 GHz (0.31 um) is much less than the trace thickness (12 um), confirming strong skin effect.
+- Conductor loss exceeds dielectric loss at fine trace widths (about 1.4:1 in this example).
+- Surface roughness adds about 50% to the conductor loss here -- smooth copper interfaces are critical for high-speed.
+- The skin depth at 14 GHz (0.55 um) is much less than the trace thickness (12 um), confirming strong skin effect.
 - 28 Gbps NRZ is comfortable on organic substrates at 20 mm trace length; 56 Gbps PAM4 would require low-loss dielectrics.

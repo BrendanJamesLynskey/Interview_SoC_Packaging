@@ -40,12 +40,12 @@ L_total ~ 65 pH
 The impedance due to this inductance at frequency f:
 ```
 Z_L = 2 * pi * f * L
-At 100 MHz: Z_L = 2*pi * 100e6 * 65e-12 = 0.041 milliohms (OK)
-At 500 MHz: Z_L = 2*pi * 500e6 * 65e-12 = 0.204 milliohms (exceeds target!)
-At 1 GHz: Z_L = 2*pi * 1e9 * 65e-12 = 0.408 milliohms (far exceeds target!)
+At 100 MHz: Z_L = 2*pi * 100e6 * 65e-12 = 40.8 milliohms (480x the target)
+At 500 MHz: Z_L = 2*pi * 500e6 * 65e-12 = 204 milliohms
+At 1 GHz: Z_L = 2*pi * 1e9 * 65e-12 = 408 milliohms
 ```
 
-The package inductance causes the impedance to rise above 85 micro-ohms at approximately 210 MHz. Above this frequency, capacitors alone cannot reduce the impedance -- the inductance of the capacitor mounting path limits effectiveness.
+The package inductance causes the impedance to rise above 85 micro-ohms at only about 210 kHz (85e-6 / (2*pi*65e-12)). Above this frequency the ball-to-bump path cannot meet the target at all: decoupling must sit on the die side of that inductance, and even then it needs picohenry-level loop inductance. Holding 85 micro-ohms to 2 GHz would need an effective inductance below 85e-6 / (2*pi*2e9) = 6.8 fH, which no package structure provides — at high frequency the target can only be approached with on-die capacitance, and in practice the design is checked against the transient droop (Step 7) rather than a flat impedance target.
 
 ### Step 4: Package Surface-Mount Capacitor Design
 
@@ -90,12 +90,12 @@ Effective ESL per unit area: 2 pH (embedded, very low)
 
 Self-resonant frequency: f_SR = 1 / (2*pi*sqrt(2e-12 * 200e-9)) = 252 MHz
 
-But with only 2 pH ESL, the impedance at 1 GHz:
+With only 2 pH ESL, the impedance at 1 GHz:
 ```
-Z = 2*pi * 1e9 * 2e-12 = 0.013 milliohms -- below target!
+Z = 2*pi * 1e9 * 2e-12 = 12.6 milliohms -- about 150x the 85 micro-ohm target
 ```
 
-Embedded capacitors with low ESL can maintain sub-target impedance to high frequencies.
+Embedded capacitors are far better than surface-mount MLCCs at high frequency (12.6 mOhm vs 204 mOhm for the 65 pH path at 500 MHz-1 GHz), but they still cannot hold an 85 micro-ohm target in the GHz range.
 
 ### Step 6: Complete Decoupling Strategy
 
@@ -115,10 +115,10 @@ Effective inductance seen by die for a 150 A step in 200 ps:
 ```
 For the fastest transients (200 ps), only capacitors with ESL < ~50 pH respond in time.
 Effective inductance with embedded caps: ~5-10 pH
-V_droop = L_eff * di/dt = 10e-12 * (150/200e-12) = 7.5 mV
+V_droop = L_eff * di/dt = 10e-12 * (150/200e-12) = 10e-12 * 7.5e11 = 7.5 V
 ```
 
-As percentage of VDD: 7.5 / 850 = 0.88%. This is well within the 3% budget.
+7.5 V is impossible on a 0.85 V rail: no package path, even at 10 pH, can supply a 150 A step in 200 ps. The first 200 ps must come from on-die capacitance. The charge in the ramp is 0.5 * 150 A * 200 ps = 15 nC, so holding the droop to 25.5 mV (3%) needs roughly 15 nC / 25.5 mV = 0.6 uF of on-die capacitance (plus a low on-die grid resistance) — six times the ~100 nF assumed in Step 6.
 
 For slower transients (5 ns step): the MLCC capacitors also contribute, and the droop is dominated by the charge delivered by capacitors:
 ```
@@ -132,8 +132,8 @@ This would exceed VDD, indicating that the board-level capacitors and VRM must r
 
 | Metric | Requirement | Achieved |
 |---|---|---|
-| Target impedance | 85 micro-ohms | Met from 10 MHz to 2 GHz (with embedded caps) |
-| Fast droop (200 ps) | < 25.5 mV | 7.5 mV (estimated) |
+| Target impedance | 85 micro-ohms | Not met above ~0.2 MHz through the 65 pH package path; embedded caps reach 12.6 mOhm at 1 GHz |
+| Fast droop (200 ps) | < 25.5 mV | 7.5 V through 10 pH — must be supplied on-die (~0.6 uF needed) |
 | Package cap count | N/A | ~250 surface-mount + embedded |
 | Cost adder for decoupling | N/A | ~$3-5 (MLCCs) + $5-10 (embedded caps) |
 

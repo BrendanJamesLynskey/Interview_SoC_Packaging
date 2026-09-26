@@ -40,7 +40,7 @@ m = 0.33
 AF_TC = (165/125)^2.5 * (2/(3*24))^0.33
 AF_TC = (1.32)^2.5 * (2/72)^0.33
 AF_TC = 2.00 * (0.0278)^0.33
-AF_TC = 2.00 * 0.302 = 0.604
+AF_TC = 2.00 * 0.307 = 0.614
 ```
 
 Wait -- the frequency factor reduces the acceleration because the test cycles faster (less time per cycle for creep). Let's recalculate properly:
@@ -54,16 +54,16 @@ t_dwell_use = 360 min = 21600 sec (6 hours engine on)
 
 AF = (165/125)^2.5 * (600/21600)^0.33
 AF = 2.00 * (0.0278)^0.33
-AF = 2.00 * 0.302 = 0.604
+AF = 2.00 * 0.307 = 0.614
 ```
 
 The field condition is actually more damaging per cycle due to longer dwell! This means 1000 test cycles corresponds to:
 
 ```
-Equivalent field cycles = 1000 / AF = 1000 / 0.604 = 1656 field cycles
+Equivalent field cycles = 1000 / AF = 1000 / 0.614 = 1630 field cycles
 ```
 
-At 2 field cycles/day: 1656 / (2 * 365) = 2.27 years.
+At 2 field cycles/day: 1630 / (2 * 365) = 2.23 years.
 
 This is insufficient for the 15-year automotive lifetime! More test cycles or design margin is needed.
 
@@ -71,21 +71,21 @@ This is insufficient for the 15-year automotive lifetime! More test cycles or de
 
 To demonstrate 15-year life (10,950 field cycles at 2/day):
 ```
-Test cycles needed = 10,950 * AF = 10,950 * 0.604 = 6,614 test cycles
+Test cycles needed = 10,950 * AF = 10,950 * 0.614 = 6,720 test cycles
 ```
 
 Options:
-1. **Run 6,614 test cycles** (very long, ~92 days at 3 cycles/hr)
+1. **Run 6,720 test cycles** (very long, ~93 days at 3 cycles/hr)
 2. **Increase test severity** (wider temperature range increases AF)
 3. **Design for much higher margin** (ensure the design has characteristic life >> 10,950 cycles)
 
 Using condition B (-55/+125 C, Delta_T = 180 C):
 ```
-AF = (180/125)^2.5 * (600/21600)^0.33 = (1.44)^2.5 * 0.302 = 2.49 * 0.302 = 0.752
-Test cycles = 10,950 * 0.752 = 8,234 (still long)
+AF = (180/125)^2.5 * (600/21600)^0.33 = (1.44)^2.5 * 0.307 = 2.49 * 0.307 = 0.763
+Test cycles = 10,950 * 0.763 = 8,350 (still long)
 ```
 
-The practical approach: demonstrate that the characteristic life (Weibull eta) is much larger than 1000 cycles, providing confidence that the 6,600 field-equivalent cycles are well within the wear-out margin.
+The practical approach: demonstrate that the characteristic life (Weibull eta) is much larger than 1000 cycles, providing confidence that the ~6,700 required test-equivalent cycles are well within the wear-out margin.
 
 ### Step 4: BGA Solder Joint Fatigue Estimation
 
@@ -105,9 +105,9 @@ Coffin-Manson fatigue life:
 N_f = 40 * (0.031)^(-2.0) = 40 / 9.6e-4 = 41,667 cycles
 ```
 
-This characteristic life (41,667 cycles) far exceeds the 1000 test cycles and 6,600 field-equivalent cycles, providing a safety factor of:
+This characteristic life (41,667 cycles) far exceeds the 1000 test cycles and the ~6,700 test-equivalent cycles for 15 years, providing a safety factor of:
 ```
-SF = 41,667 / 6,614 = 6.3x
+SF = 41,667 / 6,720 = 6.2x
 ```
 
 ### Step 5: HAST Acceleration Factor
@@ -124,24 +124,24 @@ k = 8.617e-5 eV/K
 
 AF_HAST = (85/60)^2.66 * exp(0.7/8.617e-5 * (1/333 - 1/403))
 = (1.417)^2.66 * exp(8123 * (0.003003 - 0.002481))
-= 3.20 * exp(8123 * 0.000522)
-= 3.20 * exp(4.24)
-= 3.20 * 69.4 = 222
+= 2.53 * exp(8123 * 0.000522)
+= 2.53 * exp(4.24)
+= 2.53 * 69.2 = 175
 ```
 
 Equivalent field life:
 ```
-Field hours = 96 * 222 = 21,312 hours = 2.43 years
+Field hours = 96 * 175 = 16,800 hours = 1.92 years
 ```
 
 For 15-year life at 60 C/60% RH, need:
 ```
-Test hours = 15 * 8760 / 222 = 592 hours
+Test hours = 15 * 8760 / 175 = 751 hours
 ```
 
-The 96-hour HAST demonstrates only 2.4 years of field life. For automotive, extend HAST to 264 hours (AEC-Q100 specifies this for some grades):
+The 96-hour HAST demonstrates only 1.9 years of field life. For automotive, extend HAST to 264 hours (AEC-Q100 specifies this for some grades):
 ```
-Field hours = 264 * 222 = 58,608 hours = 6.7 years
+Field hours = 264 * 175 = 46,200 hours = 5.3 years
 ```
 
 Still less than 15 years. The automotive qualification relies on multiple tests covering different failure mechanisms, with the expectation that no single test demonstrates the full 15-year life but the combination of tests and design margin provides adequate confidence.
@@ -150,12 +150,12 @@ Still less than 15 years. The automotive qualification relies on multiple tests 
 
 | Test | Test Duration | AF | Field Equivalent |
 |---|---|---|---|
-| TC (-40/+125) | 1000 cycles | 0.604 | 2.3 years |
-| HAST (130/85) | 264 hours | 222 | 6.7 years |
+| TC (-40/+125) | 1000 cycles | 0.614 | 2.2 years |
+| HAST (130/85) | 264 hours | 175 | 5.3 years |
 | HTS (150 C) | 1000 hours | ~50 | 5.7 years |
 | THB (85/85) | 1000 hours | ~25 | 2.9 years |
 
-No single test demonstrates 15-year life, but the package design has a solder fatigue life safety factor of 6.3x, providing confidence for long-term reliability.
+No single test demonstrates 15-year life, but the package design has a solder fatigue life safety factor of 6.2x, providing confidence for long-term reliability.
 
 ---
 
