@@ -125,7 +125,7 @@ D) Power regulation only
 
 A) 1 GB/s/mm  
 B) 28 GB/s/mm  
-C) Up to 317 GB/s/mm  
+C) Up to about 1,317 GB/s/mm  
 D) 10 TB/s/mm  
 
 ---
@@ -163,8 +163,8 @@ D) Testing multiple die requires compound test equipment
 | Q9 | B | UCIe (Universal Chiplet Interconnect Express) standardizes die-to-die interfaces for chiplet interoperability. |
 | Q10 | B | Die shift is the unintended movement of die during mold compound dispensing and curing, requiring adaptive lithography for subsequent RDL. |
 | Q11 | B | Sony deployed hybrid bonding in volume production for stacked CMOS image sensors before any logic application. |
-| Q12 | B | F2F bonds two die face-to-face; you cannot add a third die on top since both faces are consumed by the bond. |
+| Q12 | B | F2F bonds two die face-to-face, consuming both front sides; a third die can only be added through TSVs in one of the pair (a F2F plus F2B stack), so pure F2F is a two-die structure. |
 | Q13 | B | The IOD integrates all I/O functions (DDR controllers, PCIe, Infinity Fabric) while CCDs contain only CPU cores and cache. |
-| Q14 | C | UCIe advanced package targets up to 317 GB/s/mm at 25 um pitch with 32 Gbps/lane signaling. |
+| Q14 | C | UCIe 1.0 gives 165-1317 GB/s/mm of shoreline bandwidth for the advanced package (25-55 um bump pitch; the top figure is at 25 um and 32 GT/s). The standard package gives 28-224 GB/s/mm, so option B is the standard-package low end. |
 | Q15 | B | Chip-first places die before RDL; chip-last (RDL-first) forms the RDL on a carrier first, then places die onto the completed RDL. |
 | Q16 | B | With N die each at yield Y, the package yield is approximately Y^N, which decreases rapidly as N increases. |

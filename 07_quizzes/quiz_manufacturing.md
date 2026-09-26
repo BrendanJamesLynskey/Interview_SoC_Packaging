@@ -154,7 +154,7 @@ D) It tests for electromigration
 |---|---|---|
 | Q1 | B | TCB applies controlled force and temperature to bond one die at a time, required for fine-pitch microbumps (below ~50 um) where mass reflow causes bridging. |
 | Q2 | C | SAC305 melts at 217-220 C; peak reflow is typically 240-260 C to ensure complete wetting and joint formation. |
-| Q3 | B | Preconditioning (J-STD-020) simulates the moisture exposure and reflow thermal shock that packages experience during board assembly. |
+| Q3 | B | Preconditioning (JESD22-A113, using the J-STD-020 moisture sensitivity levels) simulates the moisture exposure and reflow thermal shock that packages experience during board assembly. |
 | Q4 | B | Coffin-Manson relates cyclic strain range to the number of cycles to fatigue failure: N_f = C * (Delta_gamma)^(-n). |
 | Q5 | A | Defective Parts Per Million; automotive targets < 1 DPPM, far stricter than consumer (50-500 DPPM). |
 | Q6 | B | Burn-in operates devices at elevated voltage and temperature to precipitate latent defects before they reach the customer. |
