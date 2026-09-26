@@ -18,7 +18,7 @@ For each pitch, calculate the bump density and required interface area:
 | Bumps per mm^2 (area) | 330 | 772 | 1,600 |
 | Total bumps needed | 1,536 | 1,536 | 1,536 |
 | Required area | 4.65 mm^2 | 1.99 mm^2 | 0.96 mm^2 |
-| Rows along 10 mm edge | 181 | 277 | 400 |
+| Bumps per row along 10 mm edge | 181 | 277 | 400 |
 | Depth from die edge | 0.47 mm (8.5 rows) | 0.20 mm (5.5 rows) | 0.10 mm (3.8 rows) |
 
 At 25 um pitch, the interface occupies less than 0.1 mm depth from the die edge -- nearly invisible in the die floor plan.
@@ -68,23 +68,23 @@ At 25 um pitch, the solder joint becomes an all-IMC joint after minimal aging. I
 
 ### Step 4: Current Density Analysis
 
-Assume each power bump carries equal current. For a die requiring 40 A through 512 power/ground bumps:
+Assume each power bump carries equal current. For a die requiring 40 A through 512 power/ground bumps, the current flows in through the 256 VDD bumps and returns through the 256 VSS bumps, so each bump carries:
 
 ```
-Current per bump = 40 / 512 = 78 mA
+Current per bump = 40 / 256 = 156 mA
 ```
 
 Current density at the solder (minimum cross-section):
 
 | Pitch | Solder diameter | Area | Current density |
 |---|---|---|---|
-| 55 um | 30 um | 707 um^2 | 1.1 x 10^4 A/cm^2 |
-| 36 um | 20 um | 314 um^2 | 2.5 x 10^4 A/cm^2 |
-| 25 um | 12 um | 113 um^2 | 6.9 x 10^4 A/cm^2 |
+| 55 um | 30 um | 707 um^2 | 2.2 x 10^4 A/cm^2 |
+| 36 um | 20 um | 314 um^2 | 5.0 x 10^4 A/cm^2 |
+| 25 um | 12 um | 113 um^2 | 1.4 x 10^5 A/cm^2 |
 
 The electromigration threshold for SnAg solder is typically 1-5 x 10^4 A/cm^2 (depending on temperature and geometry).
 
-At 25 um pitch, the current density of 6.9 x 10^4 A/cm^2 **exceeds the electromigration threshold**. Mitigation options:
+At 36 um pitch the current density (5.0 x 10^4 A/cm^2) is at the top of that range, and at 25 um pitch (1.4 x 10^5 A/cm^2) it **far exceeds the electromigration threshold**. Mitigation options:
 - Increase the number of power/ground bumps (e.g., 1024 instead of 512)
 - Reduce current per bump by distributing power across more bumps
 - Use copper-to-copper direct bonding (no solder, no electromigration in copper at these densities)
@@ -107,11 +107,11 @@ At 25 um pitch, the current density of 6.9 x 10^4 A/cm^2 **exceeds the electromi
 | Bandwidth density (GB/s/mm) | ~90 | ~140 | ~200 |
 | Solder volume per bump (um^3) | 10,600 | 2,510 | 452 |
 | IMC fraction after aging | 27% | 50% | 100% |
-| EM current density (A/cm^2) | 1.1e4 | 2.5e4 | 6.9e4 |
-| EM risk | Low | Moderate | High |
+| EM current density (A/cm^2) | 2.2e4 | 5.0e4 | 1.4e5 |
+| EM risk | Moderate | High (at threshold) | Very high |
 | Assembly maturity | HVM | Production | Early |
 
-**Recommendation:** For the described interface (1024 signals, 10 mm edge), 36 um pitch provides the best balance: sufficient density (5.5 rows), manageable IMC formation, moderate EM risk, and production-proven assembly. The move to 25 um pitch should be reserved for interfaces where the bandwidth density improvement is essential and where the design can accommodate more power/ground bumps to reduce EM risk. Beyond 25 um, hybrid bonding should be considered.
+**Recommendation:** For the described interface (1024 signals, 10 mm edge), 36 um pitch provides the best balance: sufficient density (5.5 rows), manageable IMC formation and production-proven assembly — but at 5.0 x 10^4 A/cm^2 it sits at the EM threshold, so it needs more power/ground bumps (or lower current per bump) to give EM margin. The move to 25 um pitch should be reserved for interfaces where the bandwidth density improvement is essential and where the design can accommodate more power/ground bumps to reduce EM risk. Beyond 25 um, hybrid bonding should be considered.
 
 ---
 

@@ -128,20 +128,20 @@ At 9.6 Gbps NRZ, the Nyquist frequency is 4.8 GHz.
 Skin depth at 4.8 GHz:
 ```
 delta = sqrt(rho / (pi * f * mu_0)) = sqrt(1.7e-8 / (pi * 4.8e9 * 4*pi*1e-7))
-delta = sqrt(1.7e-8 / 6.03e-2) = sqrt(2.82e-7) = 0.531 um
+delta = sqrt(1.7e-8 / 1.895e4) = sqrt(8.97e-13) = 0.95 um
 ```
 
-The skin depth (0.53 um) is comparable to the trace dimensions (0.8 um width, 2 um height), meaning current flows in the full cross-section with some skin effect.
+The skin depth (0.95 um) is comparable to the trace dimensions (0.8 um width, 2 um height), so current flows in nearly the full cross-section.
 
-Approximate conductor loss:
+Approximate conductor resistance:
 ```
-R_per_length ~ rho / (w * t_eff) where t_eff ~ min(t, 2*delta) ~ 1.06 um
-R_per_length = 1.7e-8 / (0.8e-6 * 1.06e-6) = 20.0 ohm/m = 0.020 ohm/mm
+R_per_length ~ rho / (w * t_eff) where t_eff ~ min(t, 2*delta) ~ 1.9 um
+R_per_length = 1.7e-8 / (0.8e-6 * 1.9e-6) = 11,200 ohm/m = 11.2 ohm/mm
 ```
 
-For 50-ohm line, conductor attenuation:
+This is far from a low-loss line. A 0.8 um line over 2 um of SiO2 has Z0 ≈ 57 ohm (microstrip formula) and series inductive reactance of only about 9 ohm/mm at 4.8 GHz, so R > wL: the line is in the RC regime and the low-loss form alpha_c = R / (2 * Z0) (0.85 dB/mm here) is not accurate. Solving the full propagation constant gamma = sqrt((R + jwL) * jwC) with C ≈ 0.09 pF/mm gives:
 ```
-alpha_c = R / (2 * Z0) = 0.020 / (2 * 50) = 0.0002 Np/mm = 0.00174 dB/mm
+alpha ≈ 0.086 Np/mm = 0.75 dB/mm
 ```
 
 **Dielectric loss (SiO2, Df < 0.001):**
@@ -153,9 +153,9 @@ alpha_d = pi * 4.8e9 * 1.565 * 0.001 / 3e8 = 0.0000789 Np/mm = 0.000685 dB/mm
 
 **Total insertion loss at 4.8 GHz for 4 mm average trace:**
 ```
-IL_conductor = 0.00174 * 4 = 0.0070 dB
+IL_conductor = 0.75 * 4 = 3.0 dB   (4.4 dB for the 5.83 mm longest trace)
 IL_dielectric = 0.000685 * 4 = 0.0027 dB
-IL_total_trace = 0.0097 dB
+IL_total_trace = 3.0 dB
 ```
 
 **Bump and via losses (estimated):**
@@ -163,9 +163,9 @@ IL_total_trace = 0.0097 dB
 2 microbumps + 2 RDL vias: ~0.05 dB
 ```
 
-**Total insertion loss: approximately 0.06 dB**
+**Total insertion loss: approximately 3 dB**
 
-This is extremely low, confirming that the silicon interposer introduces negligible signal degradation at HBM3 data rates.
+The dielectric loss is negligible, but the conductor loss of 0.8 um-wide RDL is not: fine-line interposer wiring behaves as an RC line, and it is the conductor resistance that limits reach and data rate on the interposer.
 
 ### Step 5: Summary
 
@@ -175,13 +175,13 @@ This is extremely low, confirming that the silicon interposer introduces negligi
 | Average trace length | 4.0 mm | -- |
 | Propagation delay (avg) | 20.9 ps | 80 ps margin in 104 ps UI |
 | Trace-to-trace skew (max) | 14.8 ps | Must be length-matched to < 5 ps |
-| Insertion loss at 4.8 GHz | 0.06 dB | Negligible |
+| Insertion loss at 4.8 GHz | ~3 dB (4 mm) | Conductor (RC) loss dominates |
 
 ---
 
 ## Key Takeaways
 
 - Silicon interposer routing capacity is very high -- 4 layers at 0.8/0.8 L/S provide far more capacity than needed for most HBM interfaces.
-- The low-loss SiO2 dielectric makes insertion loss negligible for short die-to-die traces.
+- The SiO2 dielectric loss is negligible, but the fine-line RDL conductor loss is not (~0.75 dB/mm at 4.8 GHz for 0.8 um x 2 um lines).
 - Trace length matching (serpentine routing) is more important than absolute trace length for timing.
 - The fan-out from a smaller die (HBM) to a larger die (GPU) requires diagonal routing that increases maximum trace length.

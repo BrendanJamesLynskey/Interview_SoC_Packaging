@@ -20,7 +20,7 @@ Assume:
 For a wire bond from die pad to substrate pad:
 - Typical wire bond length: 2.5 mm (including loop height)
 - Inductance per wire: L = 1.0 nH (typical for 2.5 mm wire at 25 um diameter)
-- Resistance per wire: R = 45 milliohms (copper wire, 25 um diameter, 2.5 mm length)
+- Resistance per wire: R = 88 milliohms (copper wire, 25 um diameter, 2.5 mm length: 1.72e-8 * 2.5e-3 / (pi * (12.5e-6)^2))
 - Capacitance at bond pad: C_pad = 0.3 pF
 
 The impedance of a single wire bond at 3.2 GHz:
@@ -29,19 +29,19 @@ The impedance of a single wire bond at 3.2 GHz:
 Z_L = 2 * pi * f * L = 2 * 3.14159 * 3.2e9 * 1.0e-9 = 20.1 ohms
 ```
 
-This 20.1 ohm inductive impedance in series with a 50-ohm signal is a severe impedance discontinuity. The reflection coefficient:
+This 20.1 ohm inductive impedance in series with a 50-ohm signal is a severe impedance discontinuity. The series element is a reactance (jX), so the reflection coefficient is complex:
 
 ```
-Gamma = Z_L / (2 * Z0 + Z_L) = 20.1 / (100 + 20.1) = 0.167
-Return loss = -20 * log10(0.167) = 15.5 dB
-Insertion loss contribution from reflection = -10 * log10(1 - Gamma^2) = 0.12 dB per wire bond
+|Gamma| = X / |2 * Z0 + jX| = 20.1 / sqrt(100^2 + 20.1^2) = 20.1 / 102.0 = 0.197
+Return loss = -20 * log10(0.197) = 14.1 dB
+Insertion loss contribution from reflection = -10 * log10(1 - Gamma^2) = 0.17 dB per wire bond
 ```
 
 Total insertion loss for signal path (two wire bonds: die-to-substrate + substrate-to-ball):
-- Reflection loss: ~0.24 dB
-- Resistive loss: ~0.05 dB
+- Reflection loss: ~0.34 dB
+- Resistive loss: ~0.02 dB
 - Substrate trace loss (estimated 15 mm at 0.5 dB/cm at 3.2 GHz): ~0.75 dB
-- Total package insertion loss (wire bond): ~1.04 dB
+- Total package insertion loss (wire bond): ~1.1 dB
 
 This appears within budget, but the real problem is the time-domain signal quality. The wire bond inductance creates significant ringing and intersymbol interference.
 
@@ -72,11 +72,11 @@ Total package insertion loss (flip-chip):
 | Parameter | Wire Bond | Flip-Chip | Requirement |
 |---|---|---|---|
 | Series inductance per I/O | 1.0 nH | 25 pH | -- |
-| Package insertion loss at 3.2 GHz | ~1.04 dB | ~0.40 dB | < 4 dB |
+| Package insertion loss at 3.2 GHz | ~1.1 dB | ~0.40 dB | < 4 dB |
 | Impedance discontinuity | 20.1 ohms | 0.50 ohms | Minimize |
-| Return loss at 3.2 GHz | ~15.5 dB | > 30 dB | > 15 dB |
+| Return loss at 3.2 GHz | ~14.1 dB | > 30 dB | > 15 dB |
 
-Both meet the insertion loss budget on paper, but the wire bond has almost no return loss margin and will cause significant reflections in time-domain analysis.
+Both meet the insertion loss budget on paper, but the wire bond fails the 15 dB return-loss requirement and will cause significant reflections in time-domain analysis.
 
 ### Step 4: Power Delivery Analysis
 
@@ -119,7 +119,7 @@ Flip-chip with area array at 100 um pitch:
 | Criterion | Wire Bond | Flip-Chip | Verdict |
 |---|---|---|---|
 | I/O count (1200) | Not feasible (880 max) | Easily met | Flip-chip required |
-| SI at 3.2 GHz | Marginal return loss | Excellent | Flip-chip far superior |
+| SI at 3.2 GHz | Fails return loss (14.1 dB) | Excellent | Flip-chip far superior |
 | Power droop | 125+ mV (fails) | 12.5 mV (passes) | Flip-chip required |
 | USB4 at 40 Gbps | Not feasible | Feasible | Flip-chip required |
 

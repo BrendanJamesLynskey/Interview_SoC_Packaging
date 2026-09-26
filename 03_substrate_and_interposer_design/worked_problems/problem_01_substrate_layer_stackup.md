@@ -102,7 +102,7 @@ Resistance through the substrate power path:
 - Build-up microvias (stacked, 6 layers of 50 um via, 500 vias): negligible in parallel
 
 Total DC resistance: approximately 0.5 milliohm.
-IR drop: V = I * R = 250 * 0.5e-3 = 0.125 mV (negligible).
+IR drop: V = I * R = 250 * 0.5e-3 = 0.125 V = 125 mV — 12.5% of the 1.0 V rail, far too much. A single 20 um plane over a 60 mm-wide, 30 mm path cannot carry 250 A; the core current must be spread over several parallel power planes (including the thick core layers) and shorter vertical paths, and the DC resistance brought well below the 0.2 milliohm AC target below.
 
 AC impedance target: Z_target = dV / dI = (0.05 * 1.0) / 250 = 0.2 milliohm.
 

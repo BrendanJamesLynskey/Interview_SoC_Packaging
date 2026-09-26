@@ -35,7 +35,7 @@ The QFN is eliminated due to insufficient I/O count. Both wire-bond BGA and flip
 
 PCIe Gen4 operates at 16 GT/s (8 GHz fundamental frequency) and DDR4-3200 has a 1.6 GHz clock. These high-speed interfaces require low parasitic inductance.
 
-- **Wire-bond BGA**: Bond wire inductance of 0.5-1.5 nH creates significant impedance discontinuity at 8 GHz. PCIe Gen4 specification requires channel loss below 8 dB at Nyquist. Wire bond parasitics would consume much of the loss budget. Achieving DDR4-3200 with wire bonds is feasible but requires careful loop optimization.
+- **Wire-bond BGA**: Bond wire inductance of 0.5-1.5 nH creates significant impedance discontinuity at 8 GHz. The PCIe Gen4 end-to-end channel budget is about 28 dB at 8 GHz, and at 8 GHz a 0.5-1.5 nH bond wire has 25-75 ohm of series reactance against an 85 ohm differential pair — a severe discontinuity whose reflections and loss eat into that budget. Achieving DDR4-3200 with wire bonds is feasible but requires careful loop optimization.
 - **Flip-chip CSP**: Bump inductance of 10-50 pH is negligible at these frequencies. Flip-chip comfortably supports PCIe Gen4 and DDR4-3200 with margin.
 
 Flip-chip CSP is strongly preferred for electrical performance.
@@ -51,7 +51,7 @@ Both packages require thermal enhancements at 3.5 W in an 85 degree C ambient. T
 
 ### Step 4: Evaluate Cost
 
-- **Wire-bond BGA (14x14 mm, 0.65 mm pitch)**: Substrate cost approximately $0.40-0.60. Wire bonding (320 wires at ~$0.002/wire) approximately $0.64. Assembly (die attach, bonding, mold, marking, singulation) approximately $0.30. Total estimated: $1.30-1.50.
+- **Wire-bond BGA (14x14 mm, 0.65 mm pitch)**: Substrate cost approximately $0.40-0.60. Wire bonding (320 wires at ~$0.002/wire) approximately $0.64. Assembly (die attach, bonding, mold, marking, singulation) approximately $0.30. Total estimated: $1.34-1.54.
 - **Flip-chip CSP (9.5x9.5 mm)**: Wafer-level bumping cost approximately $0.15-0.25 per die. Small substrate cost approximately $0.20-0.35. Underfill approximately $0.05. Assembly approximately $0.25. Total estimated: $0.65-0.90.
 
 Flip-chip CSP is less expensive despite the bumping cost, primarily because the substrate is much smaller.
@@ -74,7 +74,7 @@ Both packages can meet the reliability target with proper design.
 | I/O count | Marginal | Comfortable | fcCSP |
 | Electrical performance | Challenging for PCIe Gen4 | Excellent | fcCSP |
 | Thermal | Needs enhancement | Modest advantage | fcCSP |
-| Cost | $1.30-1.50 | $0.65-0.90 | fcCSP |
+| Cost | $1.34-1.54 | $0.65-0.90 | fcCSP |
 | Board reliability | Proven | Achievable | Tie |
 | PCB footprint | 14x14 mm | 9.5x9.5 mm | fcCSP |
 
